@@ -84,7 +84,7 @@
         "apiVersion": "2015-06-15",
         "dependsOn": [ ],
         "tags": {
-          "displayName": "DemoVS"
+          "displayName": "Storage Account Name"
         },
         "properties": {
           "accountType": "[parameters('Storage Replication Type')]"
