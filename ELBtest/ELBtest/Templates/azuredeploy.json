@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
   "parameters": {
-    "DemoVSType": {
+    "Storage Replication Type": {
       "type": "string",
       "defaultValue": "Standard_LRS",
       "allowedValues": [
@@ -13,53 +13,46 @@
         "Premium_LRS"
       ]
     },
-    "DemoVSName": {
+    "Storage Account Name": {
       "type": "string",
       "minLength": 1
     },
-      "Name of VM01": {
-        "type": "string",
-        "minLength": 1
-      },
-      "VM001AdminUserName": {
-        "type": "string",
-        "minLength": 1
-      },
-      "VM001AdminPassword": {
-        "type": "securestring"
-      },
-      "VM001WindowsOSVersion": {
-        "type": "string",
-        "defaultValue": "2012-R2-Datacenter",
-        "allowedValues": [
-          "2008-R2-SP1",
-          "2012-Datacenter",
-          "2012-R2-Datacenter",
-          "Windows-Server-Technical-Preview"
-        ]
-      },
-      "Name of VM02": {
-        "type": "string",
-        "minLength": 1
-      },
-      "VM002AdminUserName": {
-        "type": "string",
-        "minLength": 1
-      },
-      "VM002AdminPassword": {
-        "type": "securestring"
-      },
-      "VM002WindowsOSVersion": {
-        "type": "string",
-        "defaultValue": "2012-R2-Datacenter",
-        "allowedValues": [
-          "2008-R2-SP1",
-          "2012-Datacenter",
-          "2012-R2-Datacenter",
-          "Windows-Server-Technical-Preview"
-        ]
-      }
+    "Name of VM01": {
+      "type": "string",
+      "minLength": 1
     },
+    "VM001WindowsOSVersion": {
+      "type": "string",
+      "defaultValue": "2012-R2-Datacenter",
+      "allowedValues": [
+        "2008-R2-SP1",
+        "2012-Datacenter",
+        "2012-R2-Datacenter",
+        "Windows-Server-Technical-Preview"
+      ]
+    },
+    "Name of VM02": {
+      "type": "string",
+      "minLength": 1
+    },
+    "VM002WindowsOSVersion": {
+      "type": "string",
+      "defaultValue": "2012-R2-Datacenter",
+      "allowedValues": [
+        "2008-R2-SP1",
+        "2012-Datacenter",
+        "2012-R2-Datacenter",
+        "Windows-Server-Technical-Preview"
+      ]
+    },
+    "Administrator Username": {
+      "type": "string",
+      "minLength": 1
+    },
+    "Administrator Password": {
+      "type": "securestring"
+    }
+  },
     "variables": {
       "DemoVSPrefix": "10.0.0.0/16",
       "DemoVSSubnet1Name": "Subnet-1",
@@ -85,7 +78,7 @@
     },
     "resources": [
       {
-        "name": "[parameters('DemoVSName')]",
+        "name": "[parameters('Storage Account Name')]",
         "type": "Microsoft.Storage/storageAccounts",
         "location": "[resourceGroup().location]",
         "apiVersion": "2015-06-15",
@@ -94,7 +87,7 @@
           "displayName": "DemoVS"
         },
         "properties": {
-          "accountType": "[parameters('DemoVSType')]"
+          "accountType": "[parameters('Storage Replication Type')]"
         }
       },
       {
@@ -159,7 +152,7 @@
         "location": "[resourceGroup().location]",
         "apiVersion": "2015-06-15",
         "dependsOn": [
-          "[concat('Microsoft.Storage/storageAccounts/', parameters('DemoVSName'))]",
+          "[concat('Microsoft.Storage/storageAccounts/', parameters('Storage Account Name'))]",
           "[concat('Microsoft.Network/networkInterfaces/', variables('VM001NicName'))]"
         ],
         "tags": {
@@ -171,8 +164,8 @@
           },
           "osProfile": {
             "computerName": "[parameters('Name of VM01')]",
-            "adminUsername": "[parameters('VM001AdminUsername')]",
-            "adminPassword": "[parameters('VM001AdminPassword')]"
+            "adminUsername": "[parameters('Administrator Username')]",
+            "adminPassword": "[parameters('Administrator Password')]"
           },
           "storageProfile": {
             "imageReference": {
@@ -184,7 +177,7 @@
             "osDisk": {
               "name": "VM001OSDisk",
               "vhd": {
-                "uri": "[concat('https://', parameters('DemoVSName'), '.blob.core.windows.net/', variables('VM001StorageAccountContainerName'), '/', variables('VM001OSDiskName'), '.vhd')]"
+                "uri": "[concat('https://', parameters('Storage Account Name'), '.blob.core.windows.net/', variables('VM001StorageAccountContainerName'), '/', variables('VM001OSDiskName'), '.vhd')]"
               },
               "caching": "ReadWrite",
               "createOption": "FromImage"
@@ -230,7 +223,7 @@
         "location": "[resourceGroup().location]",
         "apiVersion": "2015-06-15",
         "dependsOn": [
-          "[concat('Microsoft.Storage/storageAccounts/', parameters('DemoVSName'))]",
+          "[concat('Microsoft.Storage/storageAccounts/', parameters('Storage Account Name'))]",
           "[concat('Microsoft.Network/networkInterfaces/', variables('VM002NicName'))]"
         ],
         "tags": {
@@ -242,8 +235,8 @@
           },
           "osProfile": {
             "computerName": "[parameters('Name of VM02')]",
-            "adminUsername": "[parameters('VM002AdminUsername')]",
-            "adminPassword": "[parameters('VM002AdminPassword')]"
+            "adminUsername": "[parameters('Administrator Username')]",
+            "adminPassword": "[parameters('Administrator Password')]"
           },
           "storageProfile": {
             "imageReference": {
@@ -255,7 +248,7 @@
             "osDisk": {
               "name": "VM002OSDisk",
               "vhd": {
-                "uri": "[concat('https://', parameters('DemoVSName'), '.blob.core.windows.net/', variables('VM002StorageAccountContainerName'), '/', variables('VM002OSDiskName'), '.vhd')]"
+                "uri": "[concat('https://', parameters('Storage Account Name'), '.blob.core.windows.net/', variables('VM002StorageAccountContainerName'), '/', variables('VM002OSDiskName'), '.vhd')]"
               },
               "caching": "ReadWrite",
               "createOption": "FromImage"
