@@ -17,7 +17,7 @@
       "type": "string",
       "minLength": 1
     },
-      "VM001Name": {
+      "Name of VM01": {
         "type": "string",
         "minLength": 1
       },
@@ -38,7 +38,7 @@
           "Windows-Server-Technical-Preview"
         ]
       },
-      "VM002Name": {
+      "Name of VM02": {
         "type": "string",
         "minLength": 1
       },
@@ -73,7 +73,7 @@
       "VM001VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'DemoVS')]",
       "VM001SubnetRef": "[concat(variables('VM001VnetID'), '/subnets/', variables('DemoVSSubnet1Name'))]",
       "VM001StorageAccountContainerName": "vhds",
-      "VM001NicName": "[concat(parameters('VM001Name'), 'NetworkInterface')]",
+      "VM001NicName": "[concat(parameters('Name of VM01'), 'NetworkInterface')]",
       "VM002ImagePublisher": "MicrosoftWindowsServer",
       "VM002ImageOffer": "WindowsServer",
       "VM002OSDiskName": "VM002OSDisk",
@@ -81,7 +81,7 @@
       "VM002VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'DemoVS')]",
       "VM002SubnetRef": "[concat(variables('VM002VnetID'), '/subnets/', variables('DemoVSSubnet1Name'))]",
       "VM002StorageAccountContainerName": "vhds",
-      "VM002NicName": "[concat(parameters('VM002Name'), 'NetworkInterface')]"
+      "VM002NicName": "[concat(parameters('Name of VM02'), 'NetworkInterface')]"
     },
     "resources": [
       {
@@ -154,7 +154,7 @@
         }
       },
       {
-        "name": "[parameters('VM001Name')]",
+        "name": "[parameters('Name of VM01')]",
         "type": "Microsoft.Compute/virtualMachines",
         "location": "[resourceGroup().location]",
         "apiVersion": "2015-06-15",
@@ -163,14 +163,14 @@
           "[concat('Microsoft.Network/networkInterfaces/', variables('VM001NicName'))]"
         ],
         "tags": {
-          "displayName": "VM001"
+          "displayName": "VM01"
         },
         "properties": {
           "hardwareProfile": {
             "vmSize": "[variables('VM001VmSize')]"
           },
           "osProfile": {
-            "computerName": "[parameters('VM001Name')]",
+            "computerName": "[parameters('Name of VM01')]",
             "adminUsername": "[parameters('VM001AdminUsername')]",
             "adminPassword": "[parameters('VM001AdminPassword')]"
           },
@@ -225,7 +225,7 @@
         }
       },
       {
-        "name": "[parameters('VM002Name')]",
+        "name": "[parameters('Name of VM02')]",
         "type": "Microsoft.Compute/virtualMachines",
         "location": "[resourceGroup().location]",
         "apiVersion": "2015-06-15",
@@ -234,14 +234,14 @@
           "[concat('Microsoft.Network/networkInterfaces/', variables('VM002NicName'))]"
         ],
         "tags": {
-          "displayName": "VM002"
+          "displayName": "VM02"
         },
         "properties": {
           "hardwareProfile": {
             "vmSize": "[variables('VM002VmSize')]"
           },
           "osProfile": {
-            "computerName": "[parameters('VM002Name')]",
+            "computerName": "[parameters('Name of VM02')]",
             "adminUsername": "[parameters('VM002AdminUsername')]",
             "adminPassword": "[parameters('VM002AdminPassword')]"
           },
