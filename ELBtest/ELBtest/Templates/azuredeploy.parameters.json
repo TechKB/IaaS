@@ -19,6 +19,9 @@
         },
       "VM002AdminPassword": {
         "value": "P@ssw0rd!!!!"
-      }
+      },
+        "DemoVSName": {
+            "value": "thisismystorageaccount"
+        }
     }
 }

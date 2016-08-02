@@ -1,273 +1,276 @@
 ﻿{
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
-    "parameters": {
-        "DemoVSType": {
-            "type": "string",
-            "defaultValue": "Standard_LRS",
-            "allowedValues": [
-                "Standard_LRS",
-                "Standard_ZRS",
-                "Standard_GRS",
-                "Standard_RAGRS",
-                "Premium_LRS"
-            ]
-        },
-        "VM001Name": {
-            "type": "string",
-            "minLength": 1
-        },
-        "VM001AdminUserName": {
-            "type": "string",
-            "minLength": 1
-        },
-        "VM001AdminPassword": {
-            "type": "securestring"
-        },
-        "VM001WindowsOSVersion": {
-            "type": "string",
-            "defaultValue": "2012-R2-Datacenter",
-            "allowedValues": [
-                "2008-R2-SP1",
-                "2012-Datacenter",
-                "2012-R2-Datacenter",
-              "Windows-Server-Technical-Preview"
-            ]
-        },
-        "VM002Name": {
-            "type": "string",
-            "minLength": 1
-        },
-        "VM002AdminUserName": {
-            "type": "string",
-            "minLength": 1
-        },
-        "VM002AdminPassword": {
-            "type": "securestring"
-        },
-        "VM002WindowsOSVersion": {
-            "type": "string",
-            "defaultValue": "2012-R2-Datacenter",
-            "allowedValues": [
-                "2008-R2-SP1",
-                "2012-Datacenter",
-                "2012-R2-Datacenter",
-                "Windows-Server-Technical-Preview"
-            ]
-        }
+  "parameters": {
+    "DemoVSType": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ]
+    },
+    "DemoVSName": {
+      "type": "string",
+      "minLength": 1
+    },
+      "VM001Name": {
+        "type": "string",
+        "minLength": 1
+      },
+      "VM001AdminUserName": {
+        "type": "string",
+        "minLength": 1
+      },
+      "VM001AdminPassword": {
+        "type": "securestring"
+      },
+      "VM001WindowsOSVersion": {
+        "type": "string",
+        "defaultValue": "2012-R2-Datacenter",
+        "allowedValues": [
+          "2008-R2-SP1",
+          "2012-Datacenter",
+          "2012-R2-Datacenter",
+          "Windows-Server-Technical-Preview"
+        ]
+      },
+      "VM002Name": {
+        "type": "string",
+        "minLength": 1
+      },
+      "VM002AdminUserName": {
+        "type": "string",
+        "minLength": 1
+      },
+      "VM002AdminPassword": {
+        "type": "securestring"
+      },
+      "VM002WindowsOSVersion": {
+        "type": "string",
+        "defaultValue": "2012-R2-Datacenter",
+        "allowedValues": [
+          "2008-R2-SP1",
+          "2012-Datacenter",
+          "2012-R2-Datacenter",
+          "Windows-Server-Technical-Preview"
+        ]
+      }
     },
     "variables": {
-        "DemoVSName": "sssaccount0001mdc",
-        "DemoVSPrefix": "10.0.0.0/16",
-        "DemoVSSubnet1Name": "Subnet-1",
-        "DemoVSSubnet1Prefix": "10.0.0.0/24",
-        "DemoVSSubnet2Name": "Subnet-2",
-        "DemoVSSubnet2Prefix": "10.0.1.0/24",
-        "VM001ImagePublisher": "MicrosoftWindowsServer",
-        "VM001ImageOffer": "WindowsServer",
-        "VM001OSDiskName": "VM001OSDisk",
-        "VM001VmSize": "Standard_D1",
-        "VM001VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'DemoVS')]",
-        "VM001SubnetRef": "[concat(variables('VM001VnetID'), '/subnets/', variables('DemoVSSubnet1Name'))]",
-        "VM001StorageAccountContainerName": "vhds",
-        "VM001NicName": "[concat(parameters('VM001Name'), 'NetworkInterface')]",
-        "VM002ImagePublisher": "MicrosoftWindowsServer",
-        "VM002ImageOffer": "WindowsServer",
-        "VM002OSDiskName": "VM002OSDisk",
-        "VM002VmSize": "Standard_D1",
-        "VM002VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'DemoVS')]",
-        "VM002SubnetRef": "[concat(variables('VM002VnetID'), '/subnets/', variables('DemoVSSubnet1Name'))]",
-        "VM002StorageAccountContainerName": "vhds",
-        "VM002NicName": "[concat(parameters('VM002Name'), 'NetworkInterface')]"
+      "DemoVSPrefix": "10.0.0.0/16",
+      "DemoVSSubnet1Name": "Subnet-1",
+      "DemoVSSubnet1Prefix": "10.0.0.0/24",
+      "DemoVSSubnet2Name": "Subnet-2",
+      "DemoVSSubnet2Prefix": "10.0.1.0/24",
+      "VM001ImagePublisher": "MicrosoftWindowsServer",
+      "VM001ImageOffer": "WindowsServer",
+      "VM001OSDiskName": "VM001OSDisk",
+      "VM001VmSize": "Standard_D1",
+      "VM001VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'DemoVS')]",
+      "VM001SubnetRef": "[concat(variables('VM001VnetID'), '/subnets/', variables('DemoVSSubnet1Name'))]",
+      "VM001StorageAccountContainerName": "vhds",
+      "VM001NicName": "[concat(parameters('VM001Name'), 'NetworkInterface')]",
+      "VM002ImagePublisher": "MicrosoftWindowsServer",
+      "VM002ImageOffer": "WindowsServer",
+      "VM002OSDiskName": "VM002OSDisk",
+      "VM002VmSize": "Standard_D1",
+      "VM002VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'DemoVS')]",
+      "VM002SubnetRef": "[concat(variables('VM002VnetID'), '/subnets/', variables('DemoVSSubnet1Name'))]",
+      "VM002StorageAccountContainerName": "vhds",
+      "VM002NicName": "[concat(parameters('VM002Name'), 'NetworkInterface')]"
     },
     "resources": [
-        {
-            "name": "[variables('DemoVSName')]",
-            "type": "Microsoft.Storage/storageAccounts",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2015-06-15",
-            "dependsOn": [ ],
-            "tags": {
-                "displayName": "DemoVS"
-            },
-            "properties": {
-                "accountType": "[parameters('DemoVSType')]"
-            }
+      {
+        "name": "[parameters('DemoVSName')]",
+        "type": "Microsoft.Storage/storageAccounts",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "dependsOn": [ ],
+        "tags": {
+          "displayName": "DemoVS"
         },
-        {
-            "name": "DemoVS",
-            "type": "Microsoft.Network/virtualNetworks",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2015-06-15",
-            "dependsOn": [ ],
-            "tags": {
-                "displayName": "DemoVS"
-            },
-            "properties": {
-                "addressSpace": {
-                    "addressPrefixes": [
-                        "[variables('DemoVSPrefix')]"
-                    ]
-                },
-                "subnets": [
-                    {
-                        "name": "[variables('DemoVSSubnet1Name')]",
-                        "properties": {
-                            "addressPrefix": "[variables('DemoVSSubnet1Prefix')]"
-                        }
-                    },
-                    {
-                        "name": "[variables('DemoVSSubnet2Name')]",
-                        "properties": {
-                            "addressPrefix": "[variables('DemoVSSubnet2Prefix')]"
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "name": "[variables('VM001NicName')]",
-            "type": "Microsoft.Network/networkInterfaces",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2015-06-15",
-            "dependsOn": [
-                "[concat('Microsoft.Network/virtualNetworks/', 'DemoVS')]"
-            ],
-            "tags": {
-                "displayName": "VM001Nic"
-            },
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
-                            "subnet": {
-                                "id": "[variables('VM001SubnetRef')]"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "name": "[parameters('VM001Name')]",
-            "type": "Microsoft.Compute/virtualMachines",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2015-06-15",
-            "dependsOn": [
-                "[concat('Microsoft.Storage/storageAccounts/', variables('DemoVSName'))]",
-                "[concat('Microsoft.Network/networkInterfaces/', variables('VM001NicName'))]"
-            ],
-            "tags": {
-                "displayName": "VM001"
-            },
-            "properties": {
-                "hardwareProfile": {
-                    "vmSize": "[variables('VM001VmSize')]"
-                },
-                "osProfile": {
-                    "computerName": "[parameters('VM001Name')]",
-                    "adminUsername": "[parameters('VM001AdminUsername')]",
-                    "adminPassword": "[parameters('VM001AdminPassword')]"
-                },
-                "storageProfile": {
-                    "imageReference": {
-                        "publisher": "[variables('VM001ImagePublisher')]",
-                        "offer": "[variables('VM001ImageOffer')]",
-                        "sku": "[parameters('VM001WindowsOSVersion')]",
-                        "version": "latest"
-                    },
-                    "osDisk": {
-                        "name": "VM001OSDisk",
-                        "vhd": {
-                            "uri": "[concat('https://', variables('DemoVSName'), '.blob.core.windows.net/', variables('VM001StorageAccountContainerName'), '/', variables('VM001OSDiskName'), '.vhd')]"
-                        },
-                        "caching": "ReadWrite",
-                        "createOption": "FromImage"
-                    }
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('VM001NicName'))]"
-                        }
-                    ]
-                }
-            }
-        },
-        {
-            "name": "[variables('VM002NicName')]",
-            "type": "Microsoft.Network/networkInterfaces",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2015-06-15",
-            "dependsOn": [
-                "[concat('Microsoft.Network/virtualNetworks/', 'DemoVS')]"
-            ],
-            "tags": {
-                "displayName": "VM002Nic"
-            },
-            "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig1",
-                        "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
-                            "subnet": {
-                                "id": "[variables('VM002SubnetRef')]"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "name": "[parameters('VM002Name')]",
-            "type": "Microsoft.Compute/virtualMachines",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2015-06-15",
-            "dependsOn": [
-                "[concat('Microsoft.Storage/storageAccounts/', variables('DemoVSName'))]",
-                "[concat('Microsoft.Network/networkInterfaces/', variables('VM002NicName'))]"
-            ],
-            "tags": {
-                "displayName": "VM002"
-            },
-            "properties": {
-                "hardwareProfile": {
-                    "vmSize": "[variables('VM002VmSize')]"
-                },
-                "osProfile": {
-                    "computerName": "[parameters('VM002Name')]",
-                    "adminUsername": "[parameters('VM002AdminUsername')]",
-                    "adminPassword": "[parameters('VM002AdminPassword')]"
-                },
-                "storageProfile": {
-                    "imageReference": {
-                        "publisher": "[variables('VM002ImagePublisher')]",
-                        "offer": "[variables('VM002ImageOffer')]",
-                        "sku": "[parameters('VM002WindowsOSVersion')]",
-                        "version": "latest"
-                    },
-                    "osDisk": {
-                        "name": "VM002OSDisk",
-                        "vhd": {
-                            "uri": "[concat('https://', variables('DemoVSName'), '.blob.core.windows.net/', variables('VM002StorageAccountContainerName'), '/', variables('VM002OSDiskName'), '.vhd')]"
-                        },
-                        "caching": "ReadWrite",
-                        "createOption": "FromImage"
-                    }
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('VM002NicName'))]"
-                        }
-                    ]
-                }
-            }
+        "properties": {
+          "accountType": "[parameters('DemoVSType')]"
         }
+      },
+      {
+        "name": "DemoVS",
+        "type": "Microsoft.Network/virtualNetworks",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "dependsOn": [ ],
+        "tags": {
+          "displayName": "DemoVS"
+        },
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "[variables('DemoVSPrefix')]"
+            ]
+          },
+          "subnets": [
+            {
+              "name": "[variables('DemoVSSubnet1Name')]",
+              "properties": {
+                "addressPrefix": "[variables('DemoVSSubnet1Prefix')]"
+              }
+            },
+            {
+              "name": "[variables('DemoVSSubnet2Name')]",
+              "properties": {
+                "addressPrefix": "[variables('DemoVSSubnet2Prefix')]"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "[variables('VM001NicName')]",
+        "type": "Microsoft.Network/networkInterfaces",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "dependsOn": [
+          "[concat('Microsoft.Network/virtualNetworks/', 'DemoVS')]"
+        ],
+        "tags": {
+          "displayName": "VM001Nic"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "[variables('VM001SubnetRef')]"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "[parameters('VM001Name')]",
+        "type": "Microsoft.Compute/virtualMachines",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "dependsOn": [
+          "[concat('Microsoft.Storage/storageAccounts/', parameters('DemoVSName'))]",
+          "[concat('Microsoft.Network/networkInterfaces/', variables('VM001NicName'))]"
+        ],
+        "tags": {
+          "displayName": "VM001"
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "[variables('VM001VmSize')]"
+          },
+          "osProfile": {
+            "computerName": "[parameters('VM001Name')]",
+            "adminUsername": "[parameters('VM001AdminUsername')]",
+            "adminPassword": "[parameters('VM001AdminPassword')]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "[variables('VM001ImagePublisher')]",
+              "offer": "[variables('VM001ImageOffer')]",
+              "sku": "[parameters('VM001WindowsOSVersion')]",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "VM001OSDisk",
+              "vhd": {
+                "uri": "[concat('https://', parameters('DemoVSName'), '.blob.core.windows.net/', variables('VM001StorageAccountContainerName'), '/', variables('VM001OSDiskName'), '.vhd')]"
+              },
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('VM001NicName'))]"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "name": "[variables('VM002NicName')]",
+        "type": "Microsoft.Network/networkInterfaces",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "dependsOn": [
+          "[concat('Microsoft.Network/virtualNetworks/', 'DemoVS')]"
+        ],
+        "tags": {
+          "displayName": "VM002Nic"
+        },
+        "properties": {
+          "ipConfigurations": [
+            {
+              "name": "ipconfig1",
+              "properties": {
+                "privateIPAllocationMethod": "Dynamic",
+                "subnet": {
+                  "id": "[variables('VM002SubnetRef')]"
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "[parameters('VM002Name')]",
+        "type": "Microsoft.Compute/virtualMachines",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2015-06-15",
+        "dependsOn": [
+          "[concat('Microsoft.Storage/storageAccounts/', parameters('DemoVSName'))]",
+          "[concat('Microsoft.Network/networkInterfaces/', variables('VM002NicName'))]"
+        ],
+        "tags": {
+          "displayName": "VM002"
+        },
+        "properties": {
+          "hardwareProfile": {
+            "vmSize": "[variables('VM002VmSize')]"
+          },
+          "osProfile": {
+            "computerName": "[parameters('VM002Name')]",
+            "adminUsername": "[parameters('VM002AdminUsername')]",
+            "adminPassword": "[parameters('VM002AdminPassword')]"
+          },
+          "storageProfile": {
+            "imageReference": {
+              "publisher": "[variables('VM002ImagePublisher')]",
+              "offer": "[variables('VM002ImageOffer')]",
+              "sku": "[parameters('VM002WindowsOSVersion')]",
+              "version": "latest"
+            },
+            "osDisk": {
+              "name": "VM002OSDisk",
+              "vhd": {
+                "uri": "[concat('https://', parameters('DemoVSName'), '.blob.core.windows.net/', variables('VM002StorageAccountContainerName'), '/', variables('VM002OSDiskName'), '.vhd')]"
+              },
+              "caching": "ReadWrite",
+              "createOption": "FromImage"
+            }
+          },
+          "networkProfile": {
+            "networkInterfaces": [
+              {
+                "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('VM002NicName'))]"
+              }
+            ]
+          }
+        }
+      }
     ],
     "outputs": {
     }
-}
+  }
