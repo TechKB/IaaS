@@ -2,26 +2,23 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "VM001Name": {
-            "value": "vstest-0001-MC"
+        "Storage Replication Type": {
+            "value": "Standard_GRS"
         },
-        "VM001AdminUserName": {
+        "Storage Account Name": {
+            "value": "mcstorage001"
+        },
+        "Name of VM01": {
+            "value": "mc-test-001"
+        },
+        "Name of VM02": {
+            "value": "mc-test-002"
+        },
+        "Administrator Username": {
             "value": "sysadmin"
         },
-        "VM001AdminPassword": {
+        "Administrator Password": {
             "value": "P@ssw0rd!!!!"
-        },
-        "VM002Name": {
-            "value": "vstest-0002-MC"
-        },
-        "VM002AdminUserName": {
-            "value": "sysadmin"
-        },
-      "VM002AdminPassword": {
-        "value": "P@ssw0rd!!!!"
-      },
-        "DemoVSName": {
-            "value": "hypopotomouse"
         }
     }
 }

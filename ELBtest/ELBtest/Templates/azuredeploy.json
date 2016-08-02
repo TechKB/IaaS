@@ -51,7 +51,40 @@
     },
     "Administrator Password": {
       "type": "securestring"
-    }
+    },
+      "_artifactsLocation": {
+          "type": "string",
+          "metadata": {
+              "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
+          }
+      },
+      "_artifactsLocationSasToken": {
+          "type": "securestring",
+          "metadata": {
+              "description": "Auto-generated token to access _artifactsLocation"
+          }
+      },
+      "IIS ConfigUpdateTagVersion": {
+          "type": "string",
+          "defaultValue": "1.0",
+          "metadata": {
+              "description": "This value must be changed from a previous deployment to ensure the extension will run"
+          }
+      },
+      "VM02 DSCUpdateTagVersion": {
+          "type": "string",
+          "defaultValue": "1.0",
+          "metadata": {
+              "description": "This value must be changed from a previous deployment to ensure the extension will run"
+          }
+      },
+      "VM01 DSCUpdateTagVersion": {
+          "type": "string",
+          "defaultValue": "1.0",
+          "metadata": {
+              "description": "This value must be changed from a previous deployment to ensure the extension will run"
+          }
+      }
   },
     "variables": {
       "DemoVSPrefix": "10.0.0.0/16",
@@ -74,7 +107,13 @@
       "VM002VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'DemoVS')]",
       "VM002SubnetRef": "[concat(variables('VM002VnetID'), '/subnets/', variables('DemoVSSubnet1Name'))]",
       "VM002StorageAccountContainerName": "vhds",
-      "VM002NicName": "[concat(parameters('Name of VM02'), 'NetworkInterface')]"
+      "VM002NicName": "[concat(parameters('Name of VM02'), 'NetworkInterface')]",
+        "IIS ConfigArchiveFolder": "DSC",
+        "IIS ConfigArchiveFileName": "IIS Config.zip",
+        "VM02 DSCArchiveFolder": "DSC",
+        "VM02 DSCArchiveFileName": "VM02 DSC.zip",
+        "VM01 DSCArchiveFolder": "DSC",
+        "VM01 DSCArchiveFileName": "VM01 DSC.zip"
     },
     "resources": [
       {
@@ -190,7 +229,41 @@
               }
             ]
           }
-        }
+        },
+          "resources": [
+              {
+                  "name": "Microsoft.Powershell.DSC",
+                  "type": "extensions",
+                  "location": "[resourceGroup().location]",
+                  "apiVersion": "2015-06-15",
+                  "dependsOn": [
+                      "[concat('Microsoft.Compute/virtualMachines/', parameters('Name of VM01'))]"
+                  ],
+                  "tags": {
+                      "displayName": "VM01 DSC"
+                  },
+                  "properties": {
+                      "publisher": "Microsoft.Powershell",
+                      "type": "DSC",
+                      "typeHandlerVersion": "2.9",
+                      "autoUpgradeMinorVersion": true,
+                      "forceUpdateTag": "[parameters('VM01 DSCUpdateTagVersion')]",
+                      "settings": {
+                          "configuration": {
+                              "url": "[concat(parameters('_artifactsLocation'), '/', variables('VM01 DSCArchiveFolder'), '/', variables('VM01 DSCArchiveFileName'))]",
+                              "script": "VM01 DSC.ps1",
+                              "function": "Main"
+                          },
+                          "configurationArguments": {
+                              "nodeName": "[parameters('Name of VM01')]"
+                          }
+                      },
+                      "protectedSettings": {
+                          "configurationUrlSasToken": "[parameters('_artifactsLocationSasToken')]"
+                      }
+                  }
+              }
+          ]
       },
       {
         "name": "[variables('VM002NicName')]",
@@ -261,7 +334,42 @@
               }
             ]
           }
-        }
+        },
+          "resources": [
+              {
+                  "name": "Microsoft.Powershell.DSC",
+                  "type": "extensions",
+                  "location": "[resourceGroup().location]",
+                  "apiVersion": "2015-06-15",
+                  "dependsOn": [
+                      "[concat('Microsoft.Compute/virtualMachines/', parameters('Name of VM02'))]"
+                  ],
+                  "tags": {
+                      "displayName": "VM02 DSC"
+                  },
+                  "properties": {
+                      "publisher": "Microsoft.Powershell",
+                      "type": "DSC",
+                      "typeHandlerVersion": "2.9",
+                      "autoUpgradeMinorVersion": true,
+                      "forceUpdateTag": "[parameters('VM02 DSCUpdateTagVersion')]",
+                      "settings": {
+                          "configuration": {
+                              "url": "[concat(parameters('_artifactsLocation'), '/', variables('VM02 DSCArchiveFolder'), '/', variables('VM02 DSCArchiveFileName'))]",
+                              "script": "VM02 DSC.ps1",
+                              "function": "Main"
+                          },
+                          "configurationArguments": {
+                              "nodeName": "[parameters('Name of VM02')]"
+                          }
+                      },
+                      "protectedSettings": {
+                          "configurationUrlSasToken": "[parameters('_artifactsLocationSasToken')]"
+                      }
+                  }
+              }
+              
+          ]
       }
     ],
     "outputs": {
