@@ -6,15 +6,29 @@ Param ( [string] $nodeName )
 Import-DscResource -ModuleName PSDesiredStateConfiguration
 
 Node $nodeName
-
 	{
-File CreateFile {
-					DestinationPath = 'C:\Temp\Test.txt'
-					Ensure = "Present"
-					Contents = 'Hello World!'
-				}
+
+WindowsFeature WebServerRole
+		{ 
+			Name = "Web-Server" 
+			Ensure = "Present"
+		} 
+
+WindowsFeature WebManagementConsole
+		{
+			Name = "Web-Mgmt-Console"
+			Ensure = "Present"
+		}
+
+File CreateFile 
+		{
+			DestinationPath = 'C:\inetpub\wwwroot\default.htm'
+			Ensure = "Present"
+			Contents = '<HTML><HEAD><TITLE>A Small Hello</TITLE></HEAD><BODY><H1>Hi</H1><P>This is very minimal "hello world" HTML document.</P></BODY></HTML>'
+		}
 
    <# This commented section represents an example configuration that can be updated as required.
+		WindowsFeature InstallWebServer 
     WindowsFeature WebServerRole
     {
       Name = "Web-Server"
