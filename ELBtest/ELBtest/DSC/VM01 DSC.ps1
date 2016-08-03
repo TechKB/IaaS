@@ -2,7 +2,7 @@ Configuration Main
 
 {
 
-    Node "localhost"
+    Node $nodeName
 
     {
 
