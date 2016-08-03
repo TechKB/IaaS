@@ -1,2 +1,2 @@
 # IaaS
-Various IaaS Visual Studio Templates
+Various Microsoft Azure IaaS Visual Studio Templates
