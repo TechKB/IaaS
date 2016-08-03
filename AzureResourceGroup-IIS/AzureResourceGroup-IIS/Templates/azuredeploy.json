@@ -56,7 +56,11 @@
       "metadata": {
         "description": "This value must be changed from a previous deployment to ensure the extension will run"
       }
-    }
+    },
+      "TechKBVIPDnsName": {
+          "type": "string",
+          "minLength": 1
+      }
   },
     "variables": {
     
@@ -74,7 +78,8 @@
         "TechKB-TestVMStorageAccountContainerName": "vhds",
         "TechKB-TestVMNicName": "[concat(parameters('TechKB-TestVMName'), 'NetworkInterface')]",
         "DSC-IISArchiveFolder": "DSC",
-        "DSC-IISArchiveFileName": "DSC-IIS.zip"
+        "DSC-IISArchiveFileName": "DSC-IIS.zip",
+        "TechKBVIPName": "[concat(parameters('TechKB-TestVMName'), 'VIP')]"
     },
     "resources": [
         {
@@ -127,7 +132,8 @@
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [
-                "[concat('Microsoft.Network/virtualNetworks/', 'TechKB-VN')]"
+                "[concat('Microsoft.Network/virtualNetworks/', 'TechKB-VN')]",
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('TechKBVIPName'))]"
             ],
             "tags": {
                 "displayName": "TechKB-TestVMNic"
@@ -140,6 +146,9 @@
                             "privateIPAllocationMethod": "Dynamic",
                             "subnet": {
                                 "id": "[variables('TechKB-TestVMSubnetRef')]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('TechKBVIPName'))]"
                             }
                         }
                     }
@@ -225,6 +234,22 @@
                     }
                 }
             ]
+        },
+        {
+            "name": "[variables('TechKBVIPName')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "TechKBVIP"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "dnsSettings": {
+                    "domainNameLabel": "[parameters('TechKBVIPDnsName')]"
+                }
+            }
         }
     ],
     "outputs": {

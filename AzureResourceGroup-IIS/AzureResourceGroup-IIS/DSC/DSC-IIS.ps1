@@ -6,11 +6,12 @@ Param ( [string] $nodeName )
 Import-DscResource -ModuleName PSDesiredStateConfiguration
 
 Node $nodeName
-  {
-	      {
-      Name = "Web-Server"
-      Ensure = "Present"
-    }
+	{
+File CreateFile {
+					DestinationPath = 'C:\Temp\Test.txt'
+					Ensure = "Present"
+					Contents = 'Hello World!'
+				}
 
    <# This commented section represents an example configuration that can be updated as required.
     WindowsFeature WebServerRole
