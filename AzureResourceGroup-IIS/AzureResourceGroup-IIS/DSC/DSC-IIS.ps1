@@ -6,6 +6,12 @@ Param ( [string] $nodeName )
 Import-DscResource -ModuleName PSDesiredStateConfiguration
 
 Node $nodeName
+
+	    {
+      Name = "Web-Server"
+      Ensure = "Present"
+    }
+
 	{
 File CreateFile {
 					DestinationPath = 'C:\Temp\Test.txt'

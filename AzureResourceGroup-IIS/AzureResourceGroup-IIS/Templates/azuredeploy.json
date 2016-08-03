@@ -64,17 +64,17 @@
   },
     "variables": {
     
-        "TechKB-VNPrefix": "10.0.0.0/16",
-        "TechKB-VNSubnet1Name": "Subnet-1",
-        "TechKB-VNSubnet1Prefix": "10.0.0.0/24",
-        "TechKB-VNSubnet2Name": "Subnet-2",
-        "TechKB-VNSubnet2Prefix": "10.0.1.0/24",
+        "VirtualNetworkPrefix": "10.0.0.0/16",
+        "VirtualNetworkSubnet1Name": "Subnet-1",
+        "VirtualNetworkSubnet1Prefix": "10.0.0.0/24",
+        "VirtualNetworkSubnet2Name": "Subnet-2",
+        "VirtualNetworkSubnet2Prefix": "10.0.1.0/24",
         "TechKB-TestVMImagePublisher": "MicrosoftWindowsServer",
         "TechKB-TestVMImageOffer": "WindowsServer",
         "TechKB-TestVMOSDiskName": "TechKB-TestVMOSDisk",
         "TechKB-TestVMVmSize": "Standard_D1",
-        "TechKB-TestVMVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'TechKB-VN')]",
-        "TechKB-TestVMSubnetRef": "[concat(variables('TechKB-TestVMVnetID'), '/subnets/', variables('TechKB-VNSubnet1Name'))]",
+        "TechKB-TestVMVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'VirtualNetwork')]",
+        "TechKB-TestVMSubnetRef": "[concat(variables('TechKB-TestVMVnetID'), '/subnets/', variables('VirtualNetworkSubnet1Name'))]",
         "TechKB-TestVMStorageAccountContainerName": "vhds",
         "TechKB-TestVMNicName": "[concat(parameters('TechKB-TestVMName'), 'NetworkInterface')]",
         "DSC-IISArchiveFolder": "DSC",
@@ -96,31 +96,31 @@
             }
         },
         {
-            "name": "TechKB-VN",
+            "name": "VirtualNetwork",
             "type": "Microsoft.Network/virtualNetworks",
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [ ],
             "tags": {
-                "displayName": "TechKB-VN"
+                "displayName": "Virtual Network"
             },
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
-                        "[variables('TechKB-VNPrefix')]"
+                        "[variables('VirtualNetworkPrefix')]"
                     ]
                 },
                 "subnets": [
                     {
-                        "name": "[variables('TechKB-VNSubnet1Name')]",
+                        "name": "[variables('VirtualNetworkSubnet1Name')]",
                         "properties": {
-                            "addressPrefix": "[variables('TechKB-VNSubnet1Prefix')]"
+                            "addressPrefix": "[variables('VirtualNetworkSubnet1Prefix')]"
                         }
                     },
                     {
-                        "name": "[variables('TechKB-VNSubnet2Name')]",
+                        "name": "[variables('VirtualNetworkSubnet2Name')]",
                         "properties": {
-                            "addressPrefix": "[variables('TechKB-VNSubnet2Prefix')]"
+                            "addressPrefix": "[variables('VirtualNetworkSubnet2Prefix')]"
                         }
                     }
                 ]
@@ -132,7 +132,7 @@
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [
-                "[concat('Microsoft.Network/virtualNetworks/', 'TechKB-VN')]",
+                "[concat('Microsoft.Network/virtualNetworks/', 'VirtualNetwork')]",
                 "[concat('Microsoft.Network/publicIPAddresses/', variables('TechKBVIPName'))]"
             ],
             "tags": {
