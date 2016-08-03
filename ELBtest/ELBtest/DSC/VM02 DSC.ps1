@@ -1,4 +1,4 @@
-Configuration FileResourceDemo
+Configuration Main
 
 {
 
@@ -12,7 +12,7 @@ Configuration FileResourceDemo
 
             Ensure = "Present"
 
-            Contents = 'Hello World! (VM02)'
+            Contents = 'Hello World!'
 
         }
 
