@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "TechKB-TestVMName": {
-            "value": "TechKB-VM001a"
+            "value": "TechKB-VM001"
         },
         "TechKB-TestVMAdminUserName": {
             "value": "sysAdmin"
@@ -12,13 +12,13 @@
             "value": "P@ssw0rd!!!!"
         },
         "StorageAccountName": {
-            "value": "techkbsa00124"
+            "value": "techkbsa"
         },
         "DSC-IISUpdateTagVersion": {
-            "value": "1.2"
+            "value": "1.3"
         },
         "TechKBVIPDnsName": {
-            "value": "techkb-ext"
+            "value": "techkbext"
         }
     }
 }
