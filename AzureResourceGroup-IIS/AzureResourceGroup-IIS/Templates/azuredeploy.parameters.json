@@ -11,7 +11,7 @@
         "TechKB-TestVMAdminPassword": {
             "value": "P@ssw0rd!!!!"
         },
-        "TechKBSA001Name": {
+        "StorageAccountName": {
             "value": "techkbsa00124"
         },
         "DSC-IISUpdateTagVersion": {
