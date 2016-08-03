@@ -1,0 +1,232 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "TechKBSA001Type": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ]
+    },
+    "TechKB-TestVMName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "TechKB-TestVMAdminUserName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "TechKBSA001Name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "TechKB-TestVMAdminPassword": {
+      "type": "securestring"
+    },
+    "TechKB-TestVMWindowsOSVersion": {
+      "type": "string",
+      "defaultValue": "2012-R2-Datacenter",
+      "allowedValues": [
+        "2008-R2-SP1",
+        "2012-Datacenter",
+        "2012-R2-Datacenter",
+        "Windows-Server-Technical-Preview"
+      ]
+    },
+    "_artifactsLocation": {
+      "type": "string",
+      "metadata": {
+        "description": "Auto-generated container in staging storage account to receive post-build staging folder upload"
+      }
+    },
+    "_artifactsLocationSasToken": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Auto-generated token to access _artifactsLocation"
+      }
+    },
+    "DSC-IISUpdateTagVersion": {
+      "type": "string",
+      "defaultValue": "1.0",
+      "metadata": {
+        "description": "This value must be changed from a previous deployment to ensure the extension will run"
+      }
+    }
+  },
+    "variables": {
+    
+        "TechKB-VNPrefix": "10.0.0.0/16",
+        "TechKB-VNSubnet1Name": "Subnet-1",
+        "TechKB-VNSubnet1Prefix": "10.0.0.0/24",
+        "TechKB-VNSubnet2Name": "Subnet-2",
+        "TechKB-VNSubnet2Prefix": "10.0.1.0/24",
+        "TechKB-TestVMImagePublisher": "MicrosoftWindowsServer",
+        "TechKB-TestVMImageOffer": "WindowsServer",
+        "TechKB-TestVMOSDiskName": "TechKB-TestVMOSDisk",
+        "TechKB-TestVMVmSize": "Standard_D1",
+        "TechKB-TestVMVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'TechKB-VN')]",
+        "TechKB-TestVMSubnetRef": "[concat(variables('TechKB-TestVMVnetID'), '/subnets/', variables('TechKB-VNSubnet1Name'))]",
+        "TechKB-TestVMStorageAccountContainerName": "vhds",
+        "TechKB-TestVMNicName": "[concat(parameters('TechKB-TestVMName'), 'NetworkInterface')]",
+        "DSC-IISArchiveFolder": "DSC",
+        "DSC-IISArchiveFileName": "DSC-IIS.zip"
+    },
+    "resources": [
+        {
+            "name": "[parameters('TechKBSA001Name')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "TechKBSA001"
+            },
+            "properties": {
+                "accountType": "[parameters('TechKBSA001Type')]"
+            }
+        },
+        {
+            "name": "TechKB-VN",
+            "type": "Microsoft.Network/virtualNetworks",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "TechKB-VN"
+            },
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('TechKB-VNPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('TechKB-VNSubnet1Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('TechKB-VNSubnet1Prefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('TechKB-VNSubnet2Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('TechKB-VNSubnet2Prefix')]"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[variables('TechKB-TestVMNicName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', 'TechKB-VN')]"
+            ],
+            "tags": {
+                "displayName": "TechKB-TestVMNic"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('TechKB-TestVMSubnetRef')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[parameters('TechKB-TestVMName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('TechKBSA001Name'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', variables('TechKB-TestVMNicName'))]"
+            ],
+            "tags": {
+                "displayName": "TechKB-TestVM"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('TechKB-TestVMVmSize')]"
+                },
+                "osProfile": {
+                    "computerName": "[parameters('TechKB-TestVMName')]",
+                    "adminUsername": "[parameters('TechKB-TestVMAdminUsername')]",
+                    "adminPassword": "[parameters('TechKB-TestVMAdminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('TechKB-TestVMImagePublisher')]",
+                        "offer": "[variables('TechKB-TestVMImageOffer')]",
+                        "sku": "[parameters('TechKB-TestVMWindowsOSVersion')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "TechKB-TestVMOSDisk",
+                        "vhd": {
+                            "uri": "[concat('https://', parameters('TechKBSA001Name'), '.blob.core.windows.net/', variables('TechKB-TestVMStorageAccountContainerName'), '/', variables('TechKB-TestVMOSDiskName'), '.vhd')]"
+                        },
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('TechKB-TestVMNicName'))]"
+                        }
+                    ]
+                }
+            },
+            "resources": [
+                {
+                    "name": "Microsoft.Powershell.DSC",
+                    "type": "extensions",
+                    "location": "[resourceGroup().location]",
+                    "apiVersion": "2015-06-15",
+                    "dependsOn": [
+                        "[concat('Microsoft.Compute/virtualMachines/', parameters('TechKB-TestVMName'))]"
+                    ],
+                    "tags": {
+                        "displayName": "DSC-IIS"
+                    },
+                    "properties": {
+                        "publisher": "Microsoft.Powershell",
+                        "type": "DSC",
+                        "typeHandlerVersion": "2.9",
+                        "autoUpgradeMinorVersion": true,
+                        "forceUpdateTag": "[parameters('DSC-IISUpdateTagVersion')]",
+                        "settings": {
+                            "configuration": {
+                                "url": "[concat(parameters('_artifactsLocation'), '/', variables('DSC-IISArchiveFolder'), '/', variables('DSC-IISArchiveFileName'))]",
+                                "script": "DSC-IIS.ps1",
+                                "function": "Main"
+                            },
+                            "configurationArguments": {
+                                "nodeName": "[parameters('TechKB-TestVMName')]"
+                            }
+                        },
+                        "protectedSettings": {
+                            "configurationUrlSasToken": "[parameters('_artifactsLocationSasToken')]"
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+    "outputs": {
+    }
+}

@@ -1,0 +1,21 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "TechKB-TestVMName": {
+            "value": "TechKB-VM001"
+        },
+        "TechKB-TestVMAdminUserName": {
+            "value": "sysAdmin"
+        },
+        "TechKB-TestVMAdminPassword": {
+            "value": "P@ssw0rd!!!!"
+        },
+        "TechKBSA001Name": {
+            "value": "techkbsa00123"
+        },
+        "DSC-IISUpdateTagVersion": {
+            "value": "1.1"
+        }
+    }
+}
