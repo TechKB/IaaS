@@ -12,16 +12,16 @@
             "value": "VM001"
         },
         "VM001PIPDnsName": {
-            "value": "VIP001"
+            "value": "techkbpip001"
         },
         "VM002PIPDnsName": {
-            "value": "VIP002"
+            "value": "techkbpip002"
         },
         "SA001": {
-            "value": "SA001"
+            "value": "techkbsa001"
         },
         "SA002": {
-            "value": "SA002"
+            "value": "techkbsa002"
         },
         "VMAdminPassword": {
             "value": "P@ssw0rd!!"
