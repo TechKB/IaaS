@@ -2,23 +2,29 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "TechKB-TestVMName": {
-            "value": "TechKB-VM001"
+        "VMAdminUserName": {
+            "value": "sysadmin"
         },
-        "TechKB-TestVMAdminUserName": {
-            "value": "sysAdmin"
+        "VM002Name": {
+            "value": "VM002"
         },
-        "TechKB-TestVMAdminPassword": {
-            "value": "P@ssw0rd!!!!"
+        "VM001Name": {
+            "value": "VM001"
         },
-        "StorageAccountName": {
-            "value": "techkbsa"
+        "VM001PIPDnsName": {
+            "value": "VIP001"
         },
-        "DSC-IISUpdateTagVersion": {
-            "value": "1.5"
+        "VM002PIPDnsName": {
+            "value": "VIP002"
         },
-        "TechKBVIPDnsName": {
-            "value": "techkbext"
+        "SA001": {
+            "value": "SA001"
+        },
+        "SA002": {
+            "value": "SA002"
+        },
+        "VMAdminPassword": {
+            "value": "P@ssw0rd!!"
         }
     }
 }

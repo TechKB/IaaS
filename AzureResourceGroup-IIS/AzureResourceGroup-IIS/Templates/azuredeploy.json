@@ -2,33 +2,22 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
   "parameters": {
-    "StorageReplicationType": {
-      "type": "string",
-      "defaultValue": "Standard_LRS",
-      "allowedValues": [
-        "Standard_LRS",
-        "Standard_ZRS",
-        "Standard_GRS",
-        "Standard_RAGRS",
-        "Premium_LRS"
-      ]
-    },
-    "TechKB-TestVMName": {
+    "VMAdminUserName": {
       "type": "string",
       "minLength": 1
     },
-    "TechKB-TestVMAdminUserName": {
+    "SA001": {
       "type": "string",
       "minLength": 1
     },
-    "StorageAccountName": {
+    "SA002": {
       "type": "string",
       "minLength": 1
     },
-    "TechKB-TestVMAdminPassword": {
+    "VMAdminPassword": {
       "type": "securestring"
     },
-    "TechKB-TestVMWindowsOSVersion": {
+    "VMWindowsOSVersion": {
       "type": "string",
       "defaultValue": "2012-R2-Datacenter",
       "allowedValues": [
@@ -50,17 +39,78 @@
         "description": "Auto-generated token to access _artifactsLocation"
       }
     },
-    "DSC-IISUpdateTagVersion": {
+    "sa002Type": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ]
+    },
+    "VM002Name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "VM002WindowsOSVersion": {
+      "type": "string",
+      "defaultValue": "2012-R2-Datacenter",
+      "allowedValues": [
+        "2008-R2-SP1",
+        "2012-Datacenter",
+        "2012-R2-Datacenter",
+        "Windows-Server-Technical-Preview"
+      ]
+    },
+    "sa001Type": {
+      "type": "string",
+      "defaultValue": "Standard_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Standard_ZRS",
+        "Standard_GRS",
+        "Standard_RAGRS",
+        "Premium_LRS"
+      ]
+    },
+    "VM001Name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "VM001WindowsOSVersion": {
+      "type": "string",
+      "defaultValue": "2012-R2-Datacenter",
+      "allowedValues": [
+        "2008-R2-SP1",
+        "2012-Datacenter",
+        "2012-R2-Datacenter",
+        "Windows-Server-Technical-Preview"
+      ]
+    },
+    "VM002DSCUpdateTagVersion": {
       "type": "string",
       "defaultValue": "1.0",
       "metadata": {
         "description": "This value must be changed from a previous deployment to ensure the extension will run"
       }
     },
-      "TechKBVIPDnsName": {
-          "type": "string",
-          "minLength": 1
+    "VM001DSCUpdateTagVersion": {
+      "type": "string",
+      "defaultValue": "1.0",
+      "metadata": {
+        "description": "This value must be changed from a previous deployment to ensure the extension will run"
       }
+    },
+    "VM001PIPDnsName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "VM002PIPDnsName": {
+      "type": "string",
+      "minLength": 1
+    }
   },
     "variables": {
     
@@ -69,32 +119,32 @@
         "VirtualNetworkSubnet1Prefix": "10.0.0.0/24",
         "VirtualNetworkSubnet2Name": "Subnet-2",
         "VirtualNetworkSubnet2Prefix": "10.0.1.0/24",
-        "TechKB-TestVMImagePublisher": "MicrosoftWindowsServer",
-        "TechKB-TestVMImageOffer": "WindowsServer",
-        "TechKB-TestVMOSDiskName": "TechKB-TestVMOSDisk",
-        "TechKB-TestVMVmSize": "Standard_D1",
-        "TechKB-TestVMVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'VirtualNetwork')]",
-        "TechKB-TestVMSubnetRef": "[concat(variables('TechKB-TestVMVnetID'), '/subnets/', variables('VirtualNetworkSubnet1Name'))]",
-        "TechKB-TestVMStorageAccountContainerName": "vhds",
-        "TechKB-TestVMNicName": "[concat(parameters('TechKB-TestVMName'), 'NetworkInterface')]",
+        "VMImagePublisher": "MicrosoftWindowsServer",
+        "VMImageOffer": "WindowsServer",
         "DSC-IISArchiveFolder": "DSC",
         "DSC-IISArchiveFileName": "DSC-IIS.zip",
-        "TechKBVIPName": "[concat(parameters('TechKB-TestVMName'), 'VIP')]"
+        "VM002ImagePublisher": "MicrosoftWindowsServer",
+        "VM002OSDiskName": "VM002OSDisk",
+        "VM002VmSize": "Standard_D1",
+        "VM002VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'VirtualNetwork')]",
+        "VM002SubnetRef": "[concat(variables('VM002VnetID'), '/subnets/', variables('VirtualNetworkSubnet1Name'))]",
+        "VM002StorageAccountContainerName": "vhds",
+        "VM002NicName": "[concat(parameters('VM002Name'), 'NetworkInterface')]",
+        "VM001ImagePublisher": "MicrosoftWindowsServer",
+        "VM001OSDiskName": "VM001OSDisk",
+        "VM001VmSize": "Standard_D1",
+        "VM001VnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'VirtualNetwork')]",
+        "VM001SubnetRef": "[concat(variables('VM001VnetID'), '/subnets/', variables('VirtualNetworkSubnet1Name'))]",
+        "VM001StorageAccountContainerName": "vhds",
+        "VM001NicName": "[concat(parameters('VM001Name'), 'NetworkInterface')]",
+        "VM002DSCArchiveFolder": "DSC",
+        "VM002DSCArchiveFileName": "VM002DSC.zip",
+        "VM001DSCArchiveFolder": "DSC",
+        "VM001DSCArchiveFileName": "VM001DSC.zip",
+        "VM001PIPName": "VM001PIP",
+        "VM002PIPName": "VM002PIP"
     },
     "resources": [
-        {
-            "name": "[parameters('StorageAccountName')]",
-            "type": "Microsoft.Storage/storageAccounts",
-            "location": "[resourceGroup().location]",
-            "apiVersion": "2015-06-15",
-            "dependsOn": [ ],
-            "tags": {
-                "displayName": "Storage Account"
-            },
-            "properties": {
-                "accountType": "[parameters('StorageReplicationType')]"
-            }
-        },
         {
             "name": "VirtualNetwork",
             "type": "Microsoft.Network/virtualNetworks",
@@ -127,16 +177,29 @@
             }
         },
         {
-            "name": "[variables('TechKB-TestVMNicName')]",
+            "name": "[parameters('SA002')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "Storage Account 002"
+            },
+            "properties": {
+                "accountType": "[parameters('sa002Type')]"
+            }
+        },
+        {
+            "name": "[variables('VM002NicName')]",
             "type": "Microsoft.Network/networkInterfaces",
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [
                 "[concat('Microsoft.Network/virtualNetworks/', 'VirtualNetwork')]",
-                "[concat('Microsoft.Network/publicIPAddresses/', variables('TechKBVIPName'))]"
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('VM002PIPName'))]"
             ],
             "tags": {
-                "displayName": "TechKB-TestVMNic"
+                "displayName": "VM002Nic"
             },
             "properties": {
                 "ipConfigurations": [
@@ -145,10 +208,10 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "subnet": {
-                                "id": "[variables('TechKB-TestVMSubnetRef')]"
+                                "id": "[variables('VM002SubnetRef')]"
                             },
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('TechKBVIPName'))]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('VM002PIPName'))]"
                             }
                         }
                     }
@@ -156,37 +219,37 @@
             }
         },
         {
-            "name": "[parameters('TechKB-TestVMName')]",
+            "name": "[parameters('VM002Name')]",
             "type": "Microsoft.Compute/virtualMachines",
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [
-                "[concat('Microsoft.Storage/storageAccounts/', parameters('StorageAccountName'))]",
-                "[concat('Microsoft.Network/networkInterfaces/', variables('TechKB-TestVMNicName'))]"
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('SA002'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', variables('VM002NicName'))]"
             ],
             "tags": {
-                "displayName": "TechKB-TestVM"
+                "displayName": "VM002"
             },
             "properties": {
                 "hardwareProfile": {
-                    "vmSize": "[variables('TechKB-TestVMVmSize')]"
+                    "vmSize": "[variables('VM002VmSize')]"
                 },
-                "osProfile": {
-                    "computerName": "[parameters('TechKB-TestVMName')]",
-                    "adminUsername": "[parameters('TechKB-TestVMAdminUsername')]",
-                    "adminPassword": "[parameters('TechKB-TestVMAdminPassword')]"
-                },
+              "osProfile": {
+                "computerName": "[parameters('VM002Name')]",
+                "adminUsername": "[parameters('VMAdminUserName')]",
+                "adminPassword": "[parameters('VMAdminPassword')]"
+              },
                 "storageProfile": {
-                    "imageReference": {
-                        "publisher": "[variables('TechKB-TestVMImagePublisher')]",
-                        "offer": "[variables('TechKB-TestVMImageOffer')]",
-                        "sku": "[parameters('TechKB-TestVMWindowsOSVersion')]",
-                        "version": "latest"
-                    },
+                  "imageReference": {
+                    "publisher": "[variables('VMImagePublisher')]",
+                    "offer": "[variables('VMImageOffer')]",
+                    "sku": "[parameters('VMWindowsOSVersion')]",
+                    "version": "latest"
+                  },
                     "osDisk": {
-                        "name": "TechKB-TestVMOSDisk",
+                        "name": "VM002OSDisk",
                         "vhd": {
-                            "uri": "[concat('https://', parameters('StorageAccountName'), '.blob.core.windows.net/', variables('TechKB-TestVMStorageAccountContainerName'), '/', variables('TechKB-TestVMOSDiskName'), '.vhd')]"
+                            "uri": "[concat('https://', parameters('SA002'), '.blob.core.windows.net/', variables('VM002StorageAccountContainerName'), '/', variables('VM002OSDiskName'), '.vhd')]"
                         },
                         "caching": "ReadWrite",
                         "createOption": "FromImage"
@@ -195,7 +258,7 @@
                 "networkProfile": {
                     "networkInterfaces": [
                         {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('TechKB-TestVMNicName'))]"
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('VM002NicName'))]"
                         }
                     ]
                 }
@@ -207,25 +270,25 @@
                     "location": "[resourceGroup().location]",
                     "apiVersion": "2015-06-15",
                     "dependsOn": [
-                        "[concat('Microsoft.Compute/virtualMachines/', parameters('TechKB-TestVMName'))]"
+                        "[concat('Microsoft.Compute/virtualMachines/', parameters('VM002Name'))]"
                     ],
                     "tags": {
-                        "displayName": "DSC-IIS"
+                        "displayName": "VM002DSC"
                     },
                     "properties": {
                         "publisher": "Microsoft.Powershell",
                         "type": "DSC",
                         "typeHandlerVersion": "2.9",
                         "autoUpgradeMinorVersion": true,
-                        "forceUpdateTag": "[parameters('DSC-IISUpdateTagVersion')]",
+                        "forceUpdateTag": "[parameters('VM002DSCUpdateTagVersion')]",
                         "settings": {
                             "configuration": {
-                                "url": "[concat(parameters('_artifactsLocation'), '/', variables('DSC-IISArchiveFolder'), '/', variables('DSC-IISArchiveFileName'))]",
-                                "script": "DSC-IIS.ps1",
+                                "url": "[concat(parameters('_artifactsLocation'), '/', variables('VM002DSCArchiveFolder'), '/', variables('VM002DSCArchiveFileName'))]",
+                                "script": "VM002DSC.ps1",
                                 "function": "Main"
                             },
                             "configurationArguments": {
-                                "nodeName": "[parameters('TechKB-TestVMName')]"
+                                "nodeName": "[parameters('VM002Name')]"
                             }
                         },
                         "protectedSettings": {
@@ -236,18 +299,156 @@
             ]
         },
         {
-            "name": "[variables('TechKBVIPName')]",
+            "name": "[parameters('SA001')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "Storage Account 001"
+            },
+            "properties": {
+                "accountType": "[parameters('sa001Type')]"
+            }
+        },
+        {
+            "name": "[variables('VM001NicName')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', 'VirtualNetwork')]",
+                "[concat('Microsoft.Network/publicIPAddresses/', variables('VM001PIPName'))]"
+            ],
+            "tags": {
+                "displayName": "VM001Nic"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('VM001SubnetRef')]"
+                            },
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('VM001PIPName'))]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[parameters('VM001Name')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('SA001'))]",
+                "[concat('Microsoft.Network/networkInterfaces/', variables('VM001NicName'))]"
+            ],
+            "tags": {
+                "displayName": "VM001"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('VM001VmSize')]"
+                },
+              "osProfile": {
+                "computerName": "[parameters('VM001Name')]",
+                "adminUsername": "[parameters('VMAdminUserName')]",
+                "adminPassword": "[parameters('VMAdminPassword')]"
+              },
+                "storageProfile": {
+                  "imageReference": {
+                    "publisher": "[variables('VMImagePublisher')]",
+                    "offer": "[variables('VMImageOffer')]",
+                    "sku": "[parameters('VMWindowsOSVersion')]",
+                    "version": "latest"
+                  },
+                    "osDisk": {
+                        "name": "VM001OSDisk",
+                        "vhd": {
+                            "uri": "[concat('https://', parameters('SA001'), '.blob.core.windows.net/', variables('VM001StorageAccountContainerName'), '/', variables('VM001OSDiskName'), '.vhd')]"
+                        },
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('VM001NicName'))]"
+                        }
+                    ]
+                }
+            },
+            "resources": [
+                {
+                    "name": "Microsoft.Powershell.DSC",
+                    "type": "extensions",
+                    "location": "[resourceGroup().location]",
+                    "apiVersion": "2015-06-15",
+                    "dependsOn": [
+                        "[concat('Microsoft.Compute/virtualMachines/', parameters('VM001Name'))]"
+                    ],
+                    "tags": {
+                        "displayName": "VM001DSC"
+                    },
+                    "properties": {
+                        "publisher": "Microsoft.Powershell",
+                        "type": "DSC",
+                        "typeHandlerVersion": "2.9",
+                        "autoUpgradeMinorVersion": true,
+                        "forceUpdateTag": "[parameters('VM001DSCUpdateTagVersion')]",
+                        "settings": {
+                            "configuration": {
+                                "url": "[concat(parameters('_artifactsLocation'), '/', variables('VM001DSCArchiveFolder'), '/', variables('VM001DSCArchiveFileName'))]",
+                                "script": "VM001DSC.ps1",
+                                "function": "Main"
+                            },
+                            "configurationArguments": {
+                                "nodeName": "[parameters('VM001Name')]"
+                            }
+                        },
+                        "protectedSettings": {
+                            "configurationUrlSasToken": "[parameters('_artifactsLocationSasToken')]"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "[variables('VM001PIPName')]",
             "type": "Microsoft.Network/publicIPAddresses",
             "location": "[resourceGroup().location]",
             "apiVersion": "2015-06-15",
             "dependsOn": [ ],
             "tags": {
-                "displayName": "TechKBVIP"
+                "displayName": "VM001PIP"
             },
             "properties": {
                 "publicIPAllocationMethod": "Dynamic",
                 "dnsSettings": {
-                    "domainNameLabel": "[parameters('TechKBVIPDnsName')]"
+                    "domainNameLabel": "[parameters('VM001PIPDnsName')]"
+                }
+            }
+        },
+        {
+            "name": "[variables('VM002PIPName')]",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2015-06-15",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "VM002PIP"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Dynamic",
+                "dnsSettings": {
+                    "domainNameLabel": "[parameters('VM002PIPDnsName')]"
                 }
             }
         }
