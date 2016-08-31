@@ -24,7 +24,7 @@ File CreateFile
 		{
 			DestinationPath = 'C:\inetpub\wwwroot\default.htm'
 			Ensure = "Present"
-			Contents = '<HTML><HEAD><TITLE>A Small Hello</TITLE></HEAD><BODY><H1>Hi</H1><P>This is very minimal "This is VM001" HTML document.</P></BODY></HTML>'
+			Contents = '<HTML><HEAD><TITLE>A Small Hello</TITLE></HEAD><BODY><H1>This is VM001</H1><P>This is very minimal HTML document.</P></BODY></HTML>'
 		}
 
    <# This commented section represents an example configuration that can be updated as required.
